@@ -48,7 +48,7 @@ export default function Galeria() {
   }
 
   async function deleteImagem(id) {
-    await axios.delete(`/imagens/s3/${id}`)
+    await axios.delete(`/imagens/google/${id}`)
     .then((response)=>{
       alert(response.data);      
       navigate("/galeria");
@@ -66,7 +66,7 @@ export default function Galeria() {
       formData.append("file", file[i], `imagem-${uuidv4()}.jpg` );
        axios({
         method: "post",
-        url: "imagens/s3",
+        url: "imagens/google",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       }).then((response) => {
@@ -95,9 +95,7 @@ export default function Galeria() {
         <label   class='buttonGerenciar' for='input-file'>Adicionar Galeria</label>
         <input id='input-file' type='file' accept="image/*" multiple="multiple" onChange={(event)=>{setFile(event.target.files)}} />
         <span id='file-name'></span>
-
            <input class='inputLogin' type='text' value={`${file.length} arquivos selecionados`}/>
-
         <button class='buttonGerenciar' type='submit'>Enviar</button>
             
       </form>
