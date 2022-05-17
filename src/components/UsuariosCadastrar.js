@@ -66,9 +66,9 @@ export default function UsuariosCadastrar(props) {
         cpf: cpf,
         telefone: telefone,
         senha: senha,
-        diaDizimo:diaDizimo,
-        diaLembrete:diaLembrete,
-        isAdmin:isAdmin
+        diaDizimo:parseInt(diaDizimo),
+        diaLembrete:parseInt(diaLembrete),
+        isAdmin:parseInt(isAdmin)
       } 
       console.log(usuario)  
       if(props.id){

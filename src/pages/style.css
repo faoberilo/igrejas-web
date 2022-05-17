@@ -148,7 +148,7 @@ body{
 .cardUsuarios{ 
     display: flex;  
     color: black;
-    width: 30%;
+    width: fit-content;
     align-items: center;
     background-color: rgba(80, 80, 80, 1);
     border-radius: 1rem;
