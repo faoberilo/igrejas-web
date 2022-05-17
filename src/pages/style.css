@@ -157,10 +157,9 @@ body{
 }
 .detalhes{
     font-size: 1.5rem;
-    margin: .25rem;
+    margin: 0.25rem;
     width: 100%;
     text-align: left;
-    padding-left: 50%;
 }
 .galeria{
     width: 20rem;
