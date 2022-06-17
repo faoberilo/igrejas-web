@@ -20,6 +20,8 @@ export default function UsuariosCadastrar(props) {
   const [diaDizimo,setDiaDizimo] = React.useState(null)
   const [diaLembrete,setDiaLembrete] = React.useState(null)
   const [isAdmin,setIsAdmin] = React.useState(null)
+  const [isLoading, setLoading] = React.useState(false)
+
 
   const getUsuarioById = async (id)=>{
     await axios.get(`/usuario/${id}`).then((response)=>{
@@ -52,7 +54,8 @@ export default function UsuariosCadastrar(props) {
 
 
   
-    const cadastrar = async (event) => {       
+    const cadastrar = async (event) => {
+      setLoading(true);      
       event.preventDefault();     
       const usuario = {
         nome: nome,
@@ -70,16 +73,17 @@ export default function UsuariosCadastrar(props) {
         diaLembrete:parseInt(diaLembrete),
         isAdmin:parseInt(isAdmin)
       } 
-      console.log(usuario)  
       if(props.id){
       await axios.put(`/usuario/${props.id}`,usuario)
       .then(()=>{
         alert("Usuario editado com sucesso!!!");
         navigate("/usuarios");
+        setLoading(false);
         document.location.reload(true);     
       }).catch((err)=>{
         alert(err)
-        navigate('/')      
+        navigate('/')
+        setLoading(false);      
       })
       }else{
       await axios.post(`/usuario/cadastrar`,usuario)
@@ -87,9 +91,11 @@ export default function UsuariosCadastrar(props) {
         alert("Usuário cadastrado com sucesso!!!");
         navigate("/usuarios");
         document.location.reload(true);
+        setLoading(false);
       }).catch((err)=>{
         alert(err)
-        navigate('/')      
+        navigate('/')
+        setLoading(false);      
       })
       }
   }   
@@ -114,7 +120,7 @@ export default function UsuariosCadastrar(props) {
               <option value={1}>Administrador</option>
               <option value={0}>Usuário Comun</option>
            </select></label>
-           <div className='centralButton'><button className='buttonLogin' type="submit" >Salvar</button></div>
+           <div className='centralButton'><button className='buttonLogin' type="submit" >{ isLoading? <div className='spinner'/> : "Salvar"}</button></div>
        </form>
 
    </div>

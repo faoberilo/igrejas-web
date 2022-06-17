@@ -53,14 +53,15 @@ const Navbar = () => {
   }
   return (
     <div className="containerNavbar">
-        <Link to="/home" className='link'><img  src={logo} alt="Logo da empresa"/></Link>
+        <Link to="/home" className="divNav"><img  src={logo} alt="Logo da empresa" className='logo'/></Link>
         <span className="titleNavbar">Igrejas-web</span>
-        <div>
-          {localStorage.getItem("TOKEN") &&
-          <>
+        <div className="divNav" style={{justifyContent: 'flex-end'}}>
+        {localStorage.getItem("TOKEN") &&
+        <>
             <button className="buttonGerenciar" onClick={()=>{getPerfil();openModal3();}}>Perfil</button>
             <button className="buttonGerenciar" onClick={logout}>Logout</button>
-          </>}
+        </>
+         }
         </div>
         {modal3IsOpen&&
         <Modal

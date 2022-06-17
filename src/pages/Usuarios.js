@@ -17,6 +17,21 @@ const customStyles = {
     flexDirection: 'column',
     width: 'fit-content'
 }}
+const customStyles2 = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: '30%',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    background:'rgb(80,80,80)',
+    padding:'1%',
+    flexDirection: 'column',
+    width: 'fit-content',
+    zInde:9
+}}
+
 
 export default function Usuarios() {
     const navigate = useNavigate();
@@ -84,6 +99,17 @@ export default function Usuarios() {
           navigate('/')
         })
       }
+      async function deleteAvatar(id) {
+        await axios.delete(`/usuario/avatar/${id}`)
+        .then((response)=>{
+          alert(response.data);      
+          navigate("/usuarios");
+          document.location.reload(true);     
+        }).catch((err)=>{
+          alert(err)
+          navigate('/')
+        })
+      }
    
   return (
     <div className='container'>
@@ -92,7 +118,7 @@ export default function Usuarios() {
               <div key={usuario.id} className='cardUsuarios'>
               <div>
               <span className='pAvisos'><b>{usuario.id} - {usuario.nome}</b></span>
-              <button className='buttonGerenciar' onClick={()=>{openModal3();getUsuarioById(usuario.id)}}>Detalhes</button>
+              <button className='buttonGerenciar' onClick={()=>{openModal3();getUsuarioById(usuario.id);setIdUsuario(usuario.id)}}>Detalhes</button>
               </div>
               <button className='buttonGerenciar' onClick={()=>{openModal();setIdUsuario(usuario.id)}}>Editar</button>
               <button className='buttonGerenciar' onClick={()=>{openModal2();setIdUsuario(usuario.id)}}>Excluir</button>
@@ -101,41 +127,29 @@ export default function Usuarios() {
             ))}
         <button className='buttonGerenciar' onClick={()=>{openModal();setIdUsuario(null)}}>Adicionar Usuario</button>
 
-        {modalIsOpen&&
-        <Modal
-        isOpen={modalIsOpen}
-        ariaHideApp={false}
-        onRequestClose={closeModal}
-        style={customStyles}
-        >
+        
+        <Modal isOpen={modalIsOpen} ariaHideApp={false} onRequestClose={closeModal} style={customStyles}>
         <div className='divButton'><button className="buttonClose" onClick={closeModal}>✘</button></div>
         <UsuariosCadastrar id={idUsuario}/>
-        </Modal>}
-        {modal2IsOpen&&
-        <Modal
-        isOpen={modal2IsOpen}
-        ariaHideApp={false}
-        onRequestClose={closeModal2}
-        style={customStyles}
-        >
+        </Modal>
+
+        <Modal isOpen={modal2IsOpen} ariaHideApp={false} onRequestClose={closeModal2} style={customStyles2}>
         <div className='containerExcluir'>
         <h2>Deseja realmente excluir o Usuario?</h2>
         <div className='buttons'>
         <button className='buttonGerenciar' onClick={()=>deleteUsuario(idUsuario)}>Sim</button>
         <button className='buttonGerenciar' onClick={closeModal2}>Não</button>
         </div>
-        </div>
-        </Modal>}
-        {modal3IsOpen&&
-        <Modal
-        isOpen={modal3IsOpen}
-        ariaHideApp={false}
-        onRequestClose={closeModal3}
-        style={customStyles}
-        >
+        </div>        
+        </Modal>
+
+        
+        <Modal isOpen={modal3IsOpen} ariaHideApp={false} onRequestClose={closeModal3} style={customStyles} >
         <div className='divButton'><button className="buttonClose" onClick={closeModal3}>✘</button></div>
         <div className='containerCadastro'>
-          <h2>Detalhes do Usuário</h2>
+        <h2>Detalhes do Usuário {usuario.id} </h2>
+        <img className='pasta' src={usuario.avatarUrl} alt={usuario.nome} />
+        <button className='buttonGerenciar' onClick={()=>{openModal2();setIdUsuario(usuario.id)}}>Excluir Avatar</button>
         <span className='detalhes'><b>Nome: </b>{usuario.nome}</span>
         <span className='detalhes'><b>Email: </b>{usuario.email}</span>
         <span className='detalhes'><b>Data de Nascimento:</b> {usuario.nascimento}</span>
@@ -147,10 +161,18 @@ export default function Usuarios() {
         <span className='detalhes'><b>Filhos:</b> {usuario.filhos}</span>
         <span className='detalhes'><b>Telefone:</b> {usuario.telefone}</span>
         <span className='detalhes'><b>Dia do dízimo:</b> {usuario.diaDizimo}</span>
-        {usuario.diaLembrete===0?null:<span className='detalhes'><b>Dia do lembrete: </b>{usuario.diaLembrete}</span>}           
-          
+        {usuario.diaLembrete===0?null:<span className='detalhes'><b>Dia do lembrete: </b>{usuario.diaLembrete}</span>}
         </div>
-        </Modal>}
+        <Modal isOpen={modal2IsOpen} ariaHideApp={false} onRequestClose={closeModal2} style={customStyles2}>
+        <div className='containerExcluir'>
+        <h2>Deseja realmente excluir o avatar do Usuário?</h2>
+        <div className='buttons'>
+        <button className='buttonGerenciar' onClick={()=>deleteAvatar(idUsuario)}>Sim</button>
+        <button className='buttonGerenciar' onClick={closeModal2}>Não</button>
+        </div>
+        </div>        
+        </Modal>
+        </Modal>
    </div>
   );
 }

@@ -5,12 +5,21 @@ export default function Home() {
    
   return (
     <div className='container'>
-     <button className='buttonHome'><Link to="/avisos" className='link'>Gerenciar Avisos</Link></button>
-     <button className='buttonHome'><Link to="/cultos" className='link'>Gerenciar Cultos</Link></button>
-     <button className='buttonHome'><Link to="/projetos" className='link'>Gerenciar Projetos</Link></button>
-     <button className='buttonHome'><Link to="/galeria" className='link'>Gerenciar Galeria</Link></button>
-     <button className='buttonHome'><Link to="/relatorios" className='link'>Gerenciar Relatórios</Link></button>
-     <button className='buttonHome'><Link to="/usuarios" className='link'>Lista de Usuários</Link></button>
+      <div className='homeContainer'>
+      <Link to="/avisos" className='link'><button className='buttonHome'>Gerenciar Avisos</button></Link>
+      <Link to="/cultos" className='link'><button className='buttonHome'>Gerenciar Cultos</button></Link>
+      <Link to="/oracoes" className='link'><button className='buttonHome'>Gerenciar Orações</button></Link>
+      <Link to="/galeria" className='link'><button className='buttonHome'>Gerenciar Galeria</button></Link>
+      <Link to="/usuarios" className='link'><button className='buttonHome'>Lista de Usuários</button></Link>
+      <Link to="/versiculo" className='link'><button className='buttonHome'>Adicionar Versículo</button></Link>
+      <Link to="/mensagem" className='link'><button className='buttonHome'>Adicionar Mensagem</button></Link>
+      <Link to="/programacao" className='link'><button className='buttonHome'>Adicionar Programação</button></Link>
+      <Link to="/ministerio" className='link'><button className='buttonHome'>Gerenciar Ministério</button></Link>
+      <Link to="/equipe" className='link'><button className='buttonHome'>Gerenciar Equipe</button></Link>
+      <Link to="/contatos" className='link'><button className='buttonHome'>Gerenciar Contatos</button></Link>
+      <Link to="/telefones" className='link'><button className='buttonHome'>Gerenciar Telefones</button></Link>
+      <Link to="/explicativo" className='link'><button className='buttonHome'>Adicionar Vídeo Explicativo</button></Link>
+     </div>
    </div>
 
   );

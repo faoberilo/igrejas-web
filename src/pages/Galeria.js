@@ -1,10 +1,8 @@
 import axios from 'axios';
 import React from 'react';
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Modal from 'react-modal';
-import { v4 as uuidv4 } from 'uuid';
-
-
+import image from '../assets/imgplaceholder.png'
 
 const customStyles = {
   content: {
@@ -21,100 +19,104 @@ const customStyles = {
 }}
 
 export default function Galeria() {
-  const navigate = useNavigate();
-  const [imagens, setImagens] = React.useState([]);
-  const [idImagem,setIdImagem] = React.useState(null);
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-  const [file, setFile] = React.useState([]);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modal2Visible, setModal2Visible] = React.useState(false);
+  const [pastas, setPastas] = React.useState([]);
+  const [idPasta,setIdPasta] = React.useState(null);
+  const [videos, setVideos] = React.useState([]);
+  const [videoId, setVideoId] = React.useState(null);
 
-
-  const getImagens = async ()=>{
-    await axios.get(`/imagens/listar`).then((response)=>{
-      setImagens(response.data)
+  const getPastas = async ()=>{
+    await axios.get(`/imagens/listarpastas`).then((response)=>{
+      setPastas(response.data)
     }).catch((err)=>{
       alert(err)
     })
-  }  
-  React.useEffect(()=>{
-    getImagens();
-  },[])
-
-  function openModal() {
-    setIsOpen(true);
+  }
+  const getVideos = async ()=>{
+    await axios.get(`/videos/listar`).then((response)=>{
+      setVideos(response.data)
+    }).catch((err)=>{
+      alert(err)
+    })
   }
 
-  function closeModal() {
-    setIsOpen(false);
-  }
+  React.useEffect(() => {
+      getPastas();
+      getVideos();
+    }, []);
 
-  async function deleteImagem(id) {
-    await axios.delete(`/imagens/google/${id}`)
+  async function deletePasta(id) {
+    await axios.delete(`/imagens/pasta/${id}`)
     .then((response)=>{
+      getPastas();
+      setModalVisible(false);
       alert(response.data);      
-      navigate("/galeria");
-      document.location.reload(true);     
     }).catch((err)=>{
+      console.log(err)
       alert(err)
-      navigate('/')
     })
   }
-
-  async function upload (event) {
-    event.preventDefault();
-    for (var i = 0; i < file.length; i++){
-      const formData = new FormData();
-      formData.append("file", file[i], `imagem-${uuidv4()}.jpg` );
-       axios({
-        method: "post",
-        url: "imagens/google",
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-      }).then((response) => {
-        navigate("/galeria");
-        document.location.reload(true);
-      }).catch((err)=>{
-        navigate("/")
-        alert(err)
-      })}  
+  async function deleteVideo(id) {
+   
+    await axios.delete(`/videos/${id}`)
+    .then((response)=>{
+      getVideos();
+      setModal2Visible(false);
+      alert(response.data);
+    }).catch((err)=>{
+      console.log(err)
+      alert(err)
+    })  
   }
    
   return (
     <div className='container'>
-      <h1>Galeria</h1>
+      <h1>Fotos</h1>
       <div className='containerGaleria'>
-      {imagens?.map((imagem)=>(
-              <div className='divGaleria' key={imagem.id}>                
-                <img className='galeria' src={imagem.url} alt={imagem.nome}  />
-                <span> Imagem {imagem.id}</span>
-                <button class='buttonGerenciar' onClick={()=>{openModal();setIdImagem(imagem.id)}}>Excluir</button>                
+      {pastas?.map((pasta)=>(
+              <div className='divGaleria' key={pasta.id}>                
+                <Link to={`/galeriadetalhes/${pasta.nome}`} ><img className='pasta' src={image} alt={pasta.nome}  /></Link>
+                <span>{pasta.nome} - {pasta.data}</span>
+                <button class='buttonGerenciar' onClick={()=>{setModalVisible(true);setIdPasta(pasta.id)}}>Excluir</button>                
               </div>
             ))}
       </div>
+      <Link to="/galeriacadastrar"><button className='buttonGerenciar'>Adicionar Nova Galeria</button></Link>
 
-       <form onSubmit={upload}>  
-        <label   class='buttonGerenciar' for='input-file'>Adicionar Galeria</label>
-        <input id='input-file' type='file' accept="image/*" multiple="multiple" onChange={(event)=>{setFile(event.target.files)}} />
-        <span id='file-name'></span>
-           <input class='inputLogin' type='text' value={`${file.length} arquivos selecionados`}/>
-        <button class='buttonGerenciar' type='submit'>Enviar</button>
-            
-      </form>
+      
 
-      {modalIsOpen&&
-        <Modal
-        isOpen={modalIsOpen}
-        ariaHideApp={false}
-        onRequestClose={closeModal}
-        style={customStyles}
-        >
+      <h1>Videos</h1>
+      <div className='containerGaleria'>
+      {videos?.map((video)=>(
+              <div className='divGaleria' key={video.id}>                
+               <iframe width="224" height="126" src={`https://www.youtube.com/embed/${video.videoId}`} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen={true}></iframe>
+                <span> {video.titulo}</span>
+                <button class='buttonGerenciar' onClick={()=>{setModal2Visible(true);setVideoId(video.id)}}>Excluir</button>                
+              </div>
+            ))}
+      </div>
+      <Link to="/galeriacadastrar"><button className='buttonGerenciar'>Adicionar Novo Vídeo</button></Link>
+
+
+        <Modal isOpen={modalVisible} ariaHideApp={false} onRequestClose={()=>setModalVisible(false)} style={customStyles} >
         <div className='containerExcluir'>
-        <h2>Deseja realmente excluir o projeto?</h2>
+        <h2>Deseja realmente excluir a pasta?</h2>
         <div className='buttons'>
-        <button className='buttonGerenciar' onClick={()=>deleteImagem(idImagem)}>Sim</button>
-        <button className='buttonGerenciar' onClick={closeModal}>Não</button>
+        <button className='buttonGerenciar' onClick={()=>deletePasta(idPasta)}>Sim</button>
+        <button className='buttonGerenciar' onClick={()=>setModalVisible(false)}>Não</button>
         </div>
         </div>
-        </Modal>}
+        </Modal>
+        <Modal isOpen={modal2Visible} ariaHideApp={false} onRequestClose={()=>setModal2Visible(false)} style={customStyles} >
+        <div className='containerExcluir'>
+        <h2>Deseja realmente excluir o vídeo?</h2>
+        <div className='buttons'>
+        <button className='buttonGerenciar' onClick={()=>deleteVideo(videoId)}>Sim</button>
+        <button className='buttonGerenciar' onClick={()=>setModal2Visible(false)}>Não</button>
+        </div>
+        </div>
+        </Modal>
 
    </div>
 

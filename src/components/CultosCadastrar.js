@@ -15,6 +15,7 @@ export default function CultosCadastrar(props) {
   const [sexta,setSexta]= React.useState(false)
   const [sabado,setSabado]= React.useState(false)
   const [domingo,setDomingo]= React.useState(false)
+  const [isLoading, setLoading] = React.useState(false)
 
   const getCultoById = async (id)=>{
     await axios.get(`/cultos/${id}`).then((response)=>{
@@ -40,7 +41,8 @@ export default function CultosCadastrar(props) {
 
 
   
-    const cadastrar = async (event) => {       
+    const cadastrar = async (event) => {  
+      setLoading(true)     
       event.preventDefault();     
       const culto = {
         local:local,
@@ -58,20 +60,24 @@ export default function CultosCadastrar(props) {
       .then(()=>{
         alert("Culto editado com sucesso!!!");
         navigate("/cultos");
+        setLoading(false)
         document.location.reload(true);     
       }).catch((err)=>{
         alert(err)
-        navigate('/')      
+        navigate('/') 
+        setLoading(false)     
       })
       }else{
       await axios.post(`/cultos/cadastrar`,culto)
       .then(()=>{
         alert("Culto cadastrado com sucesso!!!");
         navigate("/cultos");
+        setLoading(false)
         document.location.reload(true);
       }).catch((err)=>{
         alert(err)
-        navigate('/')      
+        navigate('/')
+        setLoading(false)      
       })
       }
   }
@@ -92,7 +98,7 @@ export default function CultosCadastrar(props) {
            <div className='divCheck'><input type='checkbox' value={sabado} checked={sabado} onClick={() => setSabado(!sabado)}></input><label className='label'>Sábado</label></div>
            <div className='divCheck'><input type='checkbox' value={domingo} checked={domingo} onClick={() => setDomingo(!domingo)}></input><label className='label'>Domingo</label></div>
            </div>
-           <div className='centralButton'><button className='buttonLogin' type="submit" >Salvar</button></div>
+           <div className='centralButton'><button className='buttonLogin' type="submit" >{ isLoading? <div className='spinner'/> : "Salvar"}</button></div>
        </form>
 
    </div>

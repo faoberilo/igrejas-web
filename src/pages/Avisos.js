@@ -57,6 +57,7 @@ export default function Avisos() {
       },[])
 
       async function deleteAviso(id) {
+        
         await axios.delete(`/avisos/${id}`)
         .then((response)=>{
           alert(response.data);      
@@ -80,7 +81,7 @@ export default function Avisos() {
               </div>
               </div>
             ))}
-        <button className='buttonGerenciar' onClick={()=>{openModal();setIdAviso(null)}}>Adicionar Aviso</button>
+        <button className='buttonGerenciar' onClick={()=>{openModal()}}>Adicionar Aviso</button>
 
         {modalIsOpen&&
         <Modal
@@ -90,7 +91,7 @@ export default function Avisos() {
         style={customStyles}
         >
         <div className='divButton'><button className="buttonClose" onClick={closeModal}>✘</button></div>
-        <AvisosCadastrar id={idAviso}/>
+        <AvisosCadastrar/>
         </Modal>}
         {modal2IsOpen&&
         <Modal
